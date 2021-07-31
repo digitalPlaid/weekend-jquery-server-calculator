@@ -25,19 +25,19 @@ function calculate(toCalculate) {
     let numTwo = Number(toCalculate.numTwo);
     let operation = toCalculate.operation;
     // find out which operation to use;
-    if (operation === 'add') {
+    if (operation === '+') {
         return numOne + numTwo;
-    } else if (operation === 'subtract') {
+    } else if (operation === '-') {
         return numOne - numTwo;
-    } else if (operation === 'multiply') {
+    } else if (operation === '*') {
         return numOne * numTwo;
-    } else if (operation === 'divide') {
+    } else if (operation === '/') {
         return numOne / numTwo;
     }
+    return null;
 }
 
 app.get('/calcHistory', (req, res) => {
-    console.log('in calcHistorys get request')
     res.send(calcHistory);
 })
 

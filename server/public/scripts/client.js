@@ -48,5 +48,23 @@ function retrieveCalcHistory() {
         url: '/calcHistory'
     }).then(function(response) {
         console.log(response);
+        $('#solution').empty();
+        // display the most recent calculation's solution
+        let solution = response[response.length-1].solution
+        $('#solution').append(solution)
+        // display the history (lifo - most recent at top)
+        displayHistory(response);
+
     })
+}
+
+function displayHistory(calculationsArray) {
+    // displays history of our calculator in reverse chronological order
+    let displayArea = $('#calcHistory')
+    $('#calcHistory').empty();
+    for (let i = calculationsArray.length-1; i > -1; i--) {
+        calc = calculationsArray[i];
+        displayArea.append(`<li>${calc.numOne} ${calc.operation} ${calc.numTwo} = ${calc.solution}</li>`)
+    }
+
 }
