@@ -37,11 +37,47 @@ function clearVals() {
     calculation.operation = ''
 };
 
+
+// validation is kinda hard. There's a ton of things to think about...the user could do anything!
+function validEntry() {
+    let operations = ['*','/','+','-']
+    let allowedChars = ['1','2','3','4','5','6','7','8','9','0','+','-','*','/','.'];
+    let currentExpression = $('#expression').val().split(' ').join('')
+    // deal with '.' 
+        // allow num.num or .num formats only
+    // split on all operations
+        // get rid of white space, periods will show up as "" in the array after split, which is bad and baffling
+    let nonOperations = currentExpression.split(/[+*/-]/) 
+    // if any of the entries after splitting are NaN, throw it out
+    for (element of nonOperations) {
+        if(isNaN(element)) {
+            console.log('entry failed to be number');
+            return false;
+        }
+    }
+    // I don't believe this is required now, but i'll leave it here, but commented out.
+    console.log(nonOperations);
+    // if (currentExpression.split('').some(element => !allowedChars.includes(element))) {
+    //     console.log('non-allowed characters entered')
+    //     return false;
+    // }
+    // check if there's more than one operation in a row
+    for (let i = 1; i < currentExpression.length; i++) {
+        if (operations.includes(currentExpression[i]) && operations.includes(currentExpression[i+1])) {
+            console.log('faild due to multiple operations in a row (e.g. doesn\'t allow 0 + -1, just use -')
+            return false;
+        }
+    }
+    return true;
+}
+
 function postCalc() {
-    // As is it can post data w/o any fields.
-    // probably don't want that - data validation
-    calculation.numOne = $('#numOne').val();
-    calculation.numTwo = $('#numTwo').val();
+    // data validation:
+    if (!validEntry()) {
+        alert('Cannot compute. Check your entry.')
+        return 'Failed to enter valid data.';
+    };
+
     
     $.ajax({
         method: 'POST',
