@@ -8,9 +8,23 @@ $(document).ready(onReady);
 
 function onReady(){
     // how to collect and where to collect the operation?
-    $('.operation').on('click', collectOperation);
+    $('.updateCalc').on('click', updateCalculation);
     $('#submit').on('click', postCalc);
     $('#clear').on('click', clearVals);
+}
+
+function updateCalculation() {
+    // all logs in function for figuring out why commas added to the string - shouldn't do it now.
+    let update = $(this).attr('id')
+    let currentCalc = $('#expression').val()
+    // console.log('current value: ', currentCalc);
+    currentCalc = currentCalc.split('');
+    // console.log('after split is: ', currentCalc)
+    // console.log('to be added: ', update);
+    currentCalc.push(update)
+    currentCalc = currentCalc.join('');
+    // console.log('after join: ', currentCalc)
+    $('#expression').val(currentCalc);
 }
 
 function collectOperation() {
