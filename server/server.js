@@ -20,39 +20,38 @@ app.post('/calculate', (req, res) => {
     res.sendStatus(201)
 });
 
-// fyi this currently acts a bit weird - if you wrote 36/12*3 you get back 1, not 9, it gives precedence to multiplication.
-// imo not a huge deal, as long as users understand that 
+// yuck. but it works.
 function calculate(toCalculate) {
     let expressionElements = toCalculate.split(/([+*/-])/) 
-    // console.log(expressionElements)
-    // perform operations in the correct order: (pe)mdas, left to right
     operations = ['*','/','+','-'];
     // got the counting part from here while looking for a built in function: https://stackoverflow.com/questions/5667888/counting-the-occurrences-frequency-of-array-elements
     counts = {};
     for (let operation of operations) {
         counts[operation] = expressionElements.filter(element => element === operation).length;
     }
-    for (let operation of Object.keys(counts)) {
-        // console.log('operation: ', operation);
-        // console.log('count of operation: ', counts[operation]);
-        for (let i = counts[operation]; i > 0; i--) {
-            let index = expressionElements.indexOf(operation);
-            let numOne = Number(expressionElements[index-1]);
-            let numTwo = Number(expressionElements[index+1])
-            // console.log('current state: ', expressionElements);
-            if (operation === '*') {
-                let expressionResolution = numOne * numTwo;
-                expressionElements.splice(index-1,3,expressionResolution);
-            } else if (operation === '/') {
-                let expressionResolution = numOne / numTwo;
-                expressionElements.splice(index-1,3,expressionResolution);
-            } else if (operation === '+') {
-                let expressionResolution = numOne + numTwo;
-                expressionElements.splice(index-1,3,expressionResolution);
-            } else if (operation === '-') {
-                let expressionResolution = numOne - numTwo;
-                expressionElements.splice(index-1,3,expressionResolution);
-            }
+    // do the calculation left to right, */ get precedence over -+
+    for (let i = 0; i < expressionElements.length; i++) {
+        let resolution = 0;
+        if (expressionElements[i] === '*') {
+            resolution = Number(expressionElements[i-1]) * Number(expressionElements[i+1])
+            expressionElements.splice(i-1,3,resolution);
+            i -= 2;
+        } else if (expressionElements[i] === '/') {
+            resolution = Number(expressionElements[i-1]) / Number(expressionElements[i+1])
+            expressionElements.splice(i-1,3,resolution);
+            i -= 2;
+        }
+    }
+    for (let i = 0; i < expressionElements.length; i++) {
+        let resolution = 0;
+        if (expressionElements[i] === '+') {
+            resolution = Number(expressionElements[i-1]) + Number(expressionElements[i+1])
+            expressionElements.splice(i-1,3,resolution);
+            i -= 2;
+        } else if (expressionElements[i] === '-') {
+            resolution = Number(expressionElements[i-1]) - Number(expressionElements[i+1])
+            expressionElements.splice(i-1,3,resolution);
+            i -= 2;
         }
     }
     return expressionElements[0];
