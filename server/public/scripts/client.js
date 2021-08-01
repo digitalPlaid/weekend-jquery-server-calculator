@@ -56,7 +56,8 @@ function validEntry() {
             return false;
         }
     }
-    expressionToSend = currentExpression;
+    console.log('obj to be sent: ', currentExpression);
+    expressionToSend = {toBeEvaluated: currentExpression};
     return true;
 }
 
@@ -72,12 +73,7 @@ function postCalc() {
         method: 'POST',
         url: '/calculate',
         data: expressionToSend
-    }).then(function(response){
-        // console.log('success');
-        // now get the calcHistory
-        retrieveCalcHistory();
-        // display calcHistory
-    })
+    }).then(retrieveCalcHistory())
     clearVals();
 };
 
@@ -103,7 +99,7 @@ function displayHistory(calculationsArray) {
     $('#calcHistory').empty();
     for (let i = calculationsArray.length-1; i > -1; i--) {
         calc = calculationsArray[i];
-        displayArea.append(`<li>${calc.numOne} ${calc.operation} ${calc.numTwo} = ${calc.solution}</li>`)
+        displayArea.append(`<li>${calc.toBeEvaluated} = ${calc.solution}</li>`)
     }
 
 }
