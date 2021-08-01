@@ -1,9 +1,4 @@
-let calculation = {
-    numOne: '',
-    operation: '',
-    numTwo: ''
-}
-
+let expressionToSend = '';
 $(document).ready(onReady);
 
 function onReady(){
@@ -27,21 +22,14 @@ function updateCalculation() {
     $('#expression').val(currentCalc);
 }
 
-function collectOperation() {
-    calculation.operation = $(this).attr('id');
-};
-
 function clearVals() {
     // console.log('clearing stuff')
-    $('input').val('');
-    calculation.operation = ''
+    $('#expression').val('');
 };
-
 
 // validation is kinda hard. There's a ton of things to think about...the user could do anything!
 function validEntry() {
     let operations = ['*','/','+','-']
-    let allowedChars = ['1','2','3','4','5','6','7','8','9','0','+','-','*','/','.'];
     let currentExpression = $('#expression').val().split(' ').join('')
     // deal with '.' 
         // allow num.num or .num formats only
@@ -68,6 +56,7 @@ function validEntry() {
             return false;
         }
     }
+    expressionToSend = currentExpression;
     return true;
 }
 
@@ -78,11 +67,11 @@ function postCalc() {
         return 'Failed to enter valid data.';
     };
 
-    
+    // send the data to be posted
     $.ajax({
         method: 'POST',
         url: '/calculate',
-        data: calculation
+        data: expressionToSend
     }).then(function(response){
         // console.log('success');
         // now get the calcHistory
