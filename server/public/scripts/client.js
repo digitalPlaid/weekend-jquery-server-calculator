@@ -65,6 +65,7 @@ function updateCalculation() {
 function clearVals() {
     // console.log('clearing stuff')
     $('#expression').val('');
+    $('#solution').text('');
 };
 
 // validation is kinda hard. There's a ton of things to think about...the user could do anything!
@@ -114,7 +115,6 @@ function postCalc() {
         url: '/calculate',
         data: expressionToSend
     }).then(retrieveCalcHistory())
-    clearVals();
 };
 
 function retrieveCalcHistory() {
