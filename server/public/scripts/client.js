@@ -7,6 +7,35 @@ function onReady(){
     $('#submit').on('click', postCalc);
     $('#clear').on('click', clearVals);
     $('#clearHistory').on('click', clearHistory);
+    $(document).on('click', '.historicalCalc', populateCalc)
+}
+
+function populateCalc() {
+    // could do this two ways: just grab it from dom since it's there
+    // or grab it from the server.
+    // i'll do both for practice
+
+    // from dom
+    // let historicalCalc = $(this).text().split('=')
+    // console.log(historicalCalc);
+    // $('#expression').val(historicalCalc[0]);
+    // $('#solution').text(historicalCalc[1]);
+    // I like that this doesn't require the server at all, why involve it if we don't have to?
+    // we've already displayed the history, so it's not like it's showing us anything new
+
+    // from server - seems more cumbersome - not sure how to just select a specific piece of data
+    // like 'hey server, give me this data based on the info i pass to you'
+    // maybe an answer here: https://stackoverflow.com/questions/10298899/how-to-send-data-in-request-body-with-a-get-when-using-jquery-ajax
+    elementOfInterest = $(this).attr('id');
+    console.log('element of interest: ', elementOfInterest)
+    $.ajax({
+        method: 'GET',
+        url: '/calcHistory',
+    }).then( response => {
+        console.log('response from server for individual element', response);
+        $('#expression').val(response[elementOfInterest].toBeEvaluated);
+        $('#solution').text(response[elementOfInterest].solution);
+    })
 }
 
 function clearHistory() {
@@ -110,7 +139,7 @@ function displayHistory(calculationsArray) {
     $('#calcHistory').empty();
     for (let i = calculationsArray.length-1; i > -1; i--) {
         calc = calculationsArray[i];
-        displayArea.append(`<li>${calc.toBeEvaluated} = ${calc.solution}</li>`)
+        displayArea.append(`<li class="historicalCalc" id="${i}">${calc.toBeEvaluated} = ${calc.solution}</li>`)
     }
 
 }
