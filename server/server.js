@@ -6,8 +6,6 @@ app.use(bodyParser.json())
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('./server/public/'));
 
-const port = 5000;
-
 let calcHistory = []
 
 app.post('/calculate', (req, res) => {
@@ -71,8 +69,9 @@ app.delete('/clearHistory', (req, res) => {
 })
 
 
-
-app.listen(port, () => {
-    console.log('servers up');
-})
+let port = process.env.PORT;
+if (port == null || port == "") {
+    port = 8000;
+}
+app.listen(port);
 
