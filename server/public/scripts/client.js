@@ -6,6 +6,17 @@ function onReady(){
     $('.updateCalc').on('click', updateCalculation);
     $('#submit').on('click', postCalc);
     $('#clear').on('click', clearVals);
+    $('#clearHistory').on('click', clearHistory);
+}
+
+function clearHistory() {
+    $.ajax({
+        method: 'DELETE',
+        url: '/clearHistory'
+    }).then((response) => {
+        $('#calcHistory').empty()
+        $('#solution').text('0');
+    })
 }
 
 function updateCalculation() {

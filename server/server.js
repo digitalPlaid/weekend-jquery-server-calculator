@@ -65,6 +65,11 @@ app.get('/calcHistory', (req, res) => {
     res.send(calcHistory);
 })
 
+app.delete('/clearHistory', (req, res) => {
+    calcHistory = [];
+    res.sendStatus(200)
+})
+
 app.listen(port, () => {
     console.log('servers up');
 })
